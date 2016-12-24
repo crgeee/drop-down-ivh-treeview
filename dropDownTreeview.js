@@ -6,24 +6,12 @@
         .config(treeViewConfig)
         .directive('dropDownTreeview', dropDownTreeview);
 
-    dropDownTreeview.$inject = ['$document', 'logger'];
+    dropDownTreeview.$inject = ['$document'];
 
     /**
      * @namespace dropDownTreeview
      * @desc Filter combining dropdown and tree view. 
      * @memberOf Directives
-     * @example 
-     * For filter views with single reset buttons:
-     * <sc-drop-down-tree-view 
-     *      sc-type="products" sc-filters="pmws, programIDs, systemIDs, deliverables"
-     *      placeholder="Select Product Filter(s)" preselect="all">
-     * </sc-drop-down-tree-view>
-     * @example 
-     * For filter views with multiple reset buttons:
-     * <sc-drop-down-tree-view 
-     *      sc-type="platforms" sc-filters="platformIDs, siteTypeIDs, sites"
-     *      filter-type="site" placeholder="Select Platform Filter(s)" preselect="all">
-     * </sc-drop-down-tree-view>
      */
     function dropDownTreeview($document, logger) {
         /**
@@ -31,15 +19,14 @@
          * @desc Controller for dropDownTreeview directive.
          * @param {object} $scope - directive scope
          * @param {object} $attrs - directive attrs 
-         * @param {object} widgetService - widget service
          * @param {object} data - logging service
          * @param {object} ivhTreeviewMgr - provider for accessing treeview functions
          * @param {object} ivhTreeviewBfs - provider for accessing treeview search functions
          * @memberOf Directives.dropDownTreeview
          * @instance
          */
-        controller.$inject = ['$scope', '$attrs', 'widgetService', 'ivhTreeviewMgr', 'ivhTreeviewBfs'];
-        function controller(scope, attrs, widgetService, ivhTreeviewMgr, ivhTreeviewBfs) {
+        controller.$inject = ['$scope', '$attrs', 'ivhTreeviewMgr', 'ivhTreeviewBfs'];
+        function controller(scope, attrs, ivhTreeviewMgr, ivhTreeviewBfs) {
             var vm = this;
             vm.filterNames = [];
             vm.ivhModel = {};
@@ -53,12 +40,11 @@
              * @instance
              */
             function getData(filterName) {
-                setFilterLoaded(false);
                 vm.ivhModel = {}; // clear or instantiate vm.ivhModel
 
                 return data.list(filterName, null)
                     .then(function (results) {
-                        setFilterLoaded(true);
+
                         var convertedResults = [];
                         for (var i = 0; i < results.length; i++) {
                             if (results[i].name == null) {
@@ -158,7 +144,6 @@
             /**
              * @function onClickShowHideDropdown
              * @desc On click function for the dropdown to show the tree view.
-             * @author Third-party
              * @param {} e - event for the onlick
              * @memberof Directives.dropDownTreeview
              * @instance
@@ -185,12 +170,11 @@
             /**
              * @function preselect
              * @desc Selects nodes if preselect is true on render.
-             
              * @returns {} 
              */
             function preselect() {
                 // check preselect
-                if (vm.preselect === 'true') {
+                if (vm.ddPreselect === 'true') {
                     ivhTreeviewMgr.selectAll(vm.ivhModel);
                 }
             }
@@ -203,26 +187,14 @@
              */
             vm.render = function (element) {
                 // establish new id for combobox
-                vm.cbUUID = widgetService.guid().toString();
+                vm.cbUUID = 12341234; //todo create GUID function
                 element.attr('id', vm.cbUUID);
 
-                vm.initialState = widgetService.$state.current.name;
-                vm.filterNames = (vm.scFilters != null) ? vm.scFilters.split(',') : null;
+                vm.filterNames = (vm.ddFilters != null) ? vm.ddFilters.split(',') : null;
                 if (vm.filterNames == null || vm.filterNames.length === 0) {
-                    logger.error('dropDownTreeview: No filter names provided.');
-                    return;
+                    throw ('dropDownTreeview: No filter names provided.');
+                    //return;
                 }
-
-                // add this filter to manager
-                vm.parentCtrl.addFilter({
-                    id: vm.scId,
-                    type: scope.filterType,
-                    guid: vm.cbUUID,
-                    getSelected: getSelected,
-                    reset: resetFilter,
-                    restore: restoreViewSelections,
-                    loaded: vm.isLoaded
-                });
 
                 // load the first level
                 getData(vm.filterNames[0]);
@@ -249,7 +221,7 @@
              * @instance
              */
             function restoreViewSelections(restoreData) {
-                var values = restoreData[vm.scId];
+                var values = restoreData[vm.ddId];
                 if (values == null) {
                     return;
                 }
@@ -295,17 +267,6 @@
             }
 
             /**
-             * @function setFilterLoaded
-             * @desc Tells parent filter manager that the filter is loaded
-             * @param {boolean} loaded - sets true or false for loaded
-             * @memberof Directives.dropDownTreeview
-             * @instance
-             */
-            function setFilterLoaded(loaded) {
-                vm.parentCtrl.setFilterLoaded(vm.scId, loaded);
-            }
-
-            /**
              * @function setSelectedText
              * @desc Set's the dropdown's text based on what is selected.
              * @param {object[]} selectedItems - List of selected items
@@ -320,14 +281,13 @@
                 } else if (selectedCount > 0) {
                     vm.selectedText = '1 or more items selected';
                 } else {
-                    vm.selectedText = vm.placeholder;
+                    vm.selectedText = vm.ddPlaceholder;
                 }
             };
 
             /**
              * @function setZindex
              * @desc Sets the dropdown content (with treeview) location
-             * @author Third party
              * @memberof Directives.dropDownTreeview
              * @instance
              */
@@ -376,14 +336,14 @@
             controllerAs: 'vm',
             link: link,
             replace: true,
-            require: ['dropDownTreeview', '^scFilterManager'],
+            require: ['dropDownTreeview', '^filterManager'],
             restrict: 'EA',
             scope: {
-                scId: '@',
-                scFilters: '@',
-                filterType: '@',
-                placeholder: '@',
-                preselect: '@'
+                ddId: '@',
+                ddFilters: '@',
+                ddFilterType: '@',
+                ddPlaceholder: '@',
+                ddPreselect: '@'
             },
             templateUrl: 'dropDownTreeview.html'
         };

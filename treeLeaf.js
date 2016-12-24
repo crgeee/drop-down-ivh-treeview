@@ -60,7 +60,7 @@
 
         return {
             link: link,
-            require: '^dropDownTreeview2',
+            require: '^dropDownTreeview',
             restrict: 'EA'
         };
     }

@@ -11,7 +11,7 @@
 
         /**
          * @function link
-         * @desc 
+         * @desc Link function for checkbox
          * @param {} scope 
          * @param {} element 
          * @param {} attrs 
@@ -75,7 +75,7 @@
         return {
             link: link,
             restrict: 'EA',
-            require: ['^ivhTreeview', '^scDropDownTreeView2'],
+            require: ['^ivhTreeview', '^dropDownTreeview'],
             template: [
             '<span class="k-checkbox-wrapper ivh-treeview-checkbox-wrapper" role="presentation">',
                 '<input type="checkbox" name="ivh-dropdown-checkbox" tabindex="-1" class="k-checkbox" ivh-treeview-checkbox>',
