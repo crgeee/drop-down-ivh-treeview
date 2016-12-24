@@ -9,8 +9,8 @@
 
     /**
      * @function treeFactory
-     * @desc
-     * @returns {} 
+     * @desc Factory for dropdown treeview
+     * @memberOf Directives
      */
     function treeFactory() {
         var service = {
@@ -21,10 +21,10 @@
 
         /**
          * @function genNode
-         * @desc
-         * @param {object} list - json data getting from server
-         * @param {boject} parent - parent node
-         * @memberof Directives.scDropDownTreeView
+         * @desc Generates a new treeview node
+         * @param {object} list - json data getting from data source
+         * @param {object} parent - parent node
+         * @memberof Directives.dropDownTreeview
          * @instance
          */
         function genNode(list, parent) {
@@ -57,10 +57,10 @@
 
         /**
          * @function makeNode
-         * @desc
-         * @param {} label 
-         * @param {} parent 
-         * @memberof Directives.scDropDownTreeView
+         * @desc Creates a new child node for genNode function
+         * @param {string} label - Text displayed
+         * @param {object} parent - Parent node
+         * @memberof Directives.dropDownTreeview
          * @instance
          * @returns {object} node - the new node 
          */
