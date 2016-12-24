@@ -1,0 +1,21 @@
+﻿<div class="dropdown-with-ivhTreeView noselect">
+    <div class="dropDown k-widget k-dropdown" ng-click="::vm.onClickShowHideDropdown($event)">
+        &nbsp;&nbsp;{{vm.selectedText}}
+        <div class="dropDownButton">
+            <div class="dropDownButtonIcon"></div>
+        </div>
+    </div>
+    <div class="dropDownContent">
+        <button class="btn btn-default btn-xs" style="margin: 5px 0 5px 5px; width: 42%;" ng-click="::vm.selectAll(true)">
+            Select All
+        </button>
+        <button class="btn btn-default btn-xs" style="margin: 5px 5px 5px 0; width: 42%;" ng-click="::vm.selectAll(false)">
+            Deselect All
+        </button>
+        <!-- INSERTING ivhTreeView : START -->
+        <div class="ivhTree"
+             ivh-treeview="vm.ivhModel">
+        </div>
+        <!-- INSERTING ivhTreeView : END -->
+    </div>
+</div>
