@@ -10,7 +10,7 @@
     /**
      * @namespace treeLeaf
      * @desc Nodes inside the Treeview
-     * @memberOf Directives.scDropDownTreeView
+     * @memberOf Directives.dropDownTreeview
      * @example 
      * For filter views with single reset buttons:
      * <tree-leaf></tree-leaf>
@@ -23,7 +23,7 @@
          * @param {object} scope - directive scope
          * @param {object} element - directive element
          * @param {object} attrs - directive attributes
-         * @memberof Directives.scDropDownTreeView
+         * @memberof Directives.dropDownTreeview
          * @instance
          */
         link.$inject = ['$scope', '$element', '$attrs'];
@@ -60,7 +60,7 @@
 
         return {
             link: link,
-            require: '^scDropDownTreeView2',
+            require: '^dropDownTreeview2',
             restrict: 'EA'
         };
     }
